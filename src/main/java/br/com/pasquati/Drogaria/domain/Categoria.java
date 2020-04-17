@@ -1,24 +1,25 @@
 package br.com.pasquati.Drogaria.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity // para ser uma tabela no banco de dados
 public class Categoria implements Serializable {
 
     @Id //Na chave primaria
-    @GeneratedValue(strategy = GenerationType.AUTO) //definição a estrategia automatica dos IDs no banco de dados
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //definição a estrategia automatica dos IDs no banco de dados
     private Long id;
     private String name;
+    @ManyToMany(mappedBy = "categorias")
+    private List<Produto> produtos = new ArrayList<>();
 
     public Categoria() {
     }
 
-    public Categoria(Long id, String name) {    
+    public Categoria(Long id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -37,6 +38,14 @@ public class Categoria implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Produto> getProdutos() {
+        return produtos;
+    }
+
+    public void setProdutos(List<Produto> produtos) {
+        this.produtos = produtos;
     }
 
     @Override
