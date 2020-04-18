@@ -23,8 +23,8 @@ public class ProdutoResource {
 
     @GetMapping
     public ResponseEntity<List<Produto>> findAll() {
-        List<Produto> lista = produtoService.findAll();
-        return ResponseEntity.ok(lista);
+        List<Produto> listaDeProduto = produtoService.findAll();
+        return ResponseEntity.ok(listaDeProduto);
     }
 
 
