@@ -1,7 +1,5 @@
 package br.com.pasquati.Drogaria.domain;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,7 +13,6 @@ public class Categoria implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY) //definição a estrategia automatica dos IDs no banco de dados
     private Long id;
     private String name;
-    @JsonManagedReference // Essa anotação evita a referencia ciclica. Eu quero que venha os objetos associados
     @ManyToMany(mappedBy = "categorias")
     private List<Produto> produtos = new ArrayList<>();
 

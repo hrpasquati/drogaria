@@ -2,8 +2,10 @@ package br.com.pasquati.Drogaria.services;
 
 import br.com.pasquati.Drogaria.domain.Categoria;
 import br.com.pasquati.Drogaria.repositories.CategoriaRepository;
+import br.com.pasquati.Drogaria.services.exception.DataIntegrityException;
 import br.com.pasquati.Drogaria.services.exception.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,12 +20,30 @@ public class CategoriaService {
 
     public Categoria findById(Long id) {
         Optional<Categoria> obj = categoriaRepository.findById(id);
-        return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! Id" + id + " tipo: " + Categoria.class.getName()));
+        return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! Id " + id + " tipo: " + Categoria.class.getName()));
     }//Caso esse id não exista, o metodo vai lancar uma excessão, apartir da classe ObjectNotFundException
 
     public List<Categoria> findAll() {
         return categoriaRepository.findAll();
     }
 
+    public Categoria insert(Categoria categoria) {
+        categoria.setId(null);
+        return categoriaRepository.save(categoria);
+    }
+
+    public Categoria update(Categoria categoria) {
+        findById(categoria.getId());
+        return categoriaRepository.save(categoria);
+    }
+
+    public void delete(Long id) {
+        findById(id);
+        try {
+            categoriaRepository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataIntegrityException("Não é possivel deletar uma categoria que possui produtos");
+        }
+    }
 
 }

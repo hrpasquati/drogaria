@@ -1,6 +1,6 @@
 package br.com.pasquati.Drogaria.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,7 +14,7 @@ public class Produto implements Serializable {
     private Long id;
     private String name;
     private Double preco;
-    @JsonBackReference
+    @JsonIgnore
     //Essa anotação evita a referencia ciclica. Do outro lado da associacao já foram buscados os objetos, agora eu não busco mais.
     @ManyToMany
     @JoinTable(name = "PRODUTO_CATEGORIA", joinColumns = @JoinColumn(name = "produto_id"), inverseJoinColumns = @JoinColumn(name = "categoria_id"))
