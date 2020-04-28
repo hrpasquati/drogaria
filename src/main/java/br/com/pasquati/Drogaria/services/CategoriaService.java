@@ -1,6 +1,7 @@
 package br.com.pasquati.Drogaria.services;
 
 import br.com.pasquati.Drogaria.domain.Categoria;
+import br.com.pasquati.Drogaria.dto.CategoriaDTO;
 import br.com.pasquati.Drogaria.repositories.CategoriaRepository;
 import br.com.pasquati.Drogaria.services.exception.DataIntegrityException;
 import br.com.pasquati.Drogaria.services.exception.ObjectNotFoundException;
@@ -9,6 +10,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -52,6 +54,10 @@ public class CategoriaService {
     public Page<Categoria> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
         PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(orderBy), direction);
         return categoriaRepository.findAll(pageRequest);
+    }
+
+    public Categoria fromDTO(CategoriaDTO categoriaDTO){
+        return new Categoria(categoriaDTO.getId(), categoriaDTO.getName());
     }
 
 }

@@ -2,16 +2,18 @@ package br.com.pasquati.Drogaria.dto;
 
 import br.com.pasquati.Drogaria.domain.Categoria;
 
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
 public class CategoriaDTO implements Serializable {
     private Long id;
+    @NotEmpty(message = "Preenchimento obrigatorio")
     private String name;
 
     public CategoriaDTO() {
     }
 
-    public CategoriaDTO(Categoria categoria){
+    public CategoriaDTO(Categoria categoria) {
         this.id = categoria.getId();
         this.name = categoria.getName();
     }//Resposavel por criar um DTO apartir de categoria
