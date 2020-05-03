@@ -20,7 +20,7 @@ public class Cliente implements Serializable {
     private Integer tipoCliente;
 
 
-    @OneToMany(mappedBy = "cliente")
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
     private List<Endereco> enderecos = new ArrayList<>();
 
     @ElementCollection
@@ -40,7 +40,7 @@ public class Cliente implements Serializable {
         this.nome = nome;
         this.email = email;
         this.cpfOuCnpj = cpfOuCnpj;
-        this.tipoCliente = tipoCliente.getCododigoTipoCliente();//Dessa forma vamos pegar o numero, e não o tipo cliente
+        this.tipoCliente = (tipoCliente == null) ? null : tipoCliente.getCododigoTipoCliente();//Dessa forma vamos pegar o numero, e não o tipo cliente
     }
 
     public Long getId() {
