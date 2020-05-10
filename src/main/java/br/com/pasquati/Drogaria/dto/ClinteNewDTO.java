@@ -1,11 +1,23 @@
 package br.com.pasquati.Drogaria.dto;
 
+import br.com.pasquati.Drogaria.services.validation.ValidacaoDoCampoCpfOuCnpj;
+import org.hibernate.validator.constraints.Length;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
+@ValidacaoDoCampoCpfOuCnpj
 public class ClinteNewDTO implements Serializable {
 
+    @NotEmpty(message = "Esse campo não pode ser nulo")
+    @Length(min = 5, max = 155, message = "Nome completo")
     private String nome;
+    @NotEmpty(message = "Esse campo não pode ser vazio")
+    @Email(message = "E-mail não valido")
     private String email;
+
+    @NotEmpty(message = "Campo obrigatório")
     private String cpfOuCnpj;
     private Integer tipo;
 
@@ -15,6 +27,7 @@ public class ClinteNewDTO implements Serializable {
     private String bairro;
     private String cep;
 
+    @NotEmpty(message = "Campo obrigatório")
     private String telefone1;
     private String telefone2;
     private String telefone3;
