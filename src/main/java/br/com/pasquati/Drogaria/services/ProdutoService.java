@@ -1,8 +1,14 @@
 package br.com.pasquati.Drogaria.services;
 
+import br.com.pasquati.Drogaria.domain.Categoria;
 import br.com.pasquati.Drogaria.domain.Produto;
+import br.com.pasquati.Drogaria.repositories.CategoriaRepository;
 import br.com.pasquati.Drogaria.repositories.ProdutoRepository;
+import br.com.pasquati.Drogaria.services.exception.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,13 +20,18 @@ public class ProdutoService {
     @Autowired
     private ProdutoRepository produtoRepository;
 
+    @Autowired
+    private CategoriaRepository categoriaRepository;
+
     public Produto findById(Long id){
         Optional<Produto> obj = produtoRepository.findById(id);
-        return obj.orElse(null);
+        return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado"));
     }
 
-    public List<Produto> findAll(){
-        return produtoRepository.findAll();
+    public Page<Produto> searchProduto (String nome, List<Long> ids, Integer pages, Integer linsPerPage, String orderBy, String direction){
+        PageRequest pageRequest = PageRequest.of(pages, linsPerPage, Sort.Direction.valueOf(direction), orderBy);
+        List<Categoria> categorias = categoriaRepository.findAllById(ids);
+        return produtoRepository.search(nome, categorias, pageRequest);
     }
 
 

@@ -1,9 +1,12 @@
 package br.com.pasquati.Drogaria.services.validation;
 
+import br.com.pasquati.Drogaria.domain.Cliente;
 import br.com.pasquati.Drogaria.domain.enums.TipoCliente;
 import br.com.pasquati.Drogaria.dto.ClinteNewDTO;
+import br.com.pasquati.Drogaria.repositories.ClienteRepository;
 import br.com.pasquati.Drogaria.resources.exception.FieldMessage;
 import br.com.pasquati.Drogaria.services.validation.utils.BR;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -11,6 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ValidacaoDoCampoCpfOuCnpjValidator implements ConstraintValidator<ValidacaoDoCampoCpfOuCnpj, ClinteNewDTO> {
+
+    @Autowired
+    public ClienteRepository clienteRepository;
+
     @Override
     public void initialize(ValidacaoDoCampoCpfOuCnpj constraintAnnotation) {
 
@@ -26,6 +33,11 @@ public class ValidacaoDoCampoCpfOuCnpjValidator implements ConstraintValidator<V
 
         if (clinteNewDTO.getTipo().equals(TipoCliente.PESSOAJURIDICA.getCododigoTipoCliente()) && !BR.isValidCNPJ(clinteNewDTO.getCpfOuCnpj())) {
             fieldMessages.add(new FieldMessage("cpfOuCnpj", "CNPJ inválido"));
+        }
+
+        Cliente cliente = clienteRepository.findByEmail(clinteNewDTO.getEmail());
+        if (cliente != null){
+            fieldMessages.add(new FieldMessage("email", "Email invalido"));
         }
 
         for (FieldMessage e : fieldMessages){

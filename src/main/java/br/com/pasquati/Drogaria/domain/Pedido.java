@@ -4,10 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Entity
 public class Pedido implements Serializable {
@@ -37,6 +36,14 @@ public class Pedido implements Serializable {
         this.pagamento = pagamento;
         this.cliente = cliente;
         this.endercoDeEntrega = endercoDeEntrega;
+    }
+
+    public double getValorTotal() {
+        double soma = 0;
+        for (ItemPedido itemPedido : itens) {
+            soma = soma + itemPedido.getSubTotal();
+        }
+        return soma;
     }
 
     public void setItens(Set<ItemPedido> itens) {
@@ -83,6 +90,9 @@ public class Pedido implements Serializable {
         this.endercoDeEntrega = endercoDeEntrega;
     }
 
+    public Set<ItemPedido> getItens() {
+        return itens;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -95,5 +105,26 @@ public class Pedido implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        final StringBuilder sb = new StringBuilder();
+        sb.append("Pedido número: ");
+        sb.append(getId());
+        sb.append(" , Instante: ").append(simpleDateFormat.format(getInstante()));
+        sb.append(" , Cliente: ");
+        sb.append(getCliente().getNome());
+        sb.append(" , Situação do pagamento: ");
+        sb.append(getPagamento().getEstadoPagamento().getDescrição());
+        sb.append("\nDetalhes\n");
+        for (ItemPedido itemPedido : getItens()){
+            sb.append(itemPedido.toString());
+        }
+        sb.append("Valor total :");
+        sb.append(numberFormat.format(getValorTotal()));
+        return sb.toString();
     }
 }
